@@ -2,6 +2,10 @@
 {
     internal class Task
     {
+        //Global Variables
+        private static List<Task> Tasks = new List<Task>();
+        public static List<Task> GetTasks() { return Tasks; }
+
         //Fields
         private string _taskName;
         private string _taskDescription;
