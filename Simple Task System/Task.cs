@@ -20,5 +20,12 @@
             _taskName = taskName;
             _taskDescription = taskDescription;
         }
+
+        //Methods
+        public void UpdateTask(string taskName, string taskDescription)
+        {
+            _taskName = taskName;
+            _taskDescription = taskDescription;
+        }
     }
 }

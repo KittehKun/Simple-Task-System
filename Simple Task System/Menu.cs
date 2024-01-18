@@ -18,6 +18,7 @@
                 case ConsoleKey.D1:
                     Console.Clear();
                     DisplayTasks();
+                    ReturnToMenu();
                     break;
                 case ConsoleKey.D2:
                     Console.Clear();
@@ -53,13 +54,13 @@
                 return;
             }
 
+            int taskId = 1;
             foreach (Task task in Task.GetTasks())
             {
+                Console.WriteLine($"Task ID: {taskId}");
                 Console.WriteLine($"Task Name: {task.TaskName}");
                 Console.WriteLine($"Description: {task.TaskDescription}\n");
             }
-
-            ReturnToMenu();
         }
 
         private static void CreateTask()
@@ -90,33 +91,19 @@
 
         private static void DeleteTask()
         {
-            if (Task.GetTasks().Count != 0)
-            {
-                int taskId = 1;
-                foreach (Task task in Task.GetTasks())
-                {
-                    Console.WriteLine($"Task ID: {taskId}");
-                    Console.WriteLine($"Task Name: {task.TaskName}");
-                    Console.WriteLine($"Description: {task.TaskDescription}\n");
-                    taskId++;
-                }
 
-                Console.Write("Enter the ID of the task you wish to delete: ");
-                string input = Console.ReadLine()!;
-                if (int.TryParse(input, out int taskToDelete))
+            DisplayTasks();
+
+            Console.Write("Enter the ID of the task you wish to delete: ");
+            string input = Console.ReadLine()!;
+            if (int.TryParse(input, out int taskToDelete))
+            {
+                if (taskToDelete > 0 && taskToDelete <= Task.GetTasks().Count)
                 {
-                    if (taskToDelete > 0 && taskToDelete <= Task.GetTasks().Count)
-                    {
-                        Task.GetTasks().RemoveAt(taskToDelete - 1);
-                        Console.WriteLine("Task deleted successfully.\n");
-                        ReturnToMenu();
-                        return;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Invalid task ID entered.");
-                        DeleteTask();
-                    }
+                    Task.GetTasks().RemoveAt(taskToDelete - 1);
+                    Console.WriteLine("Task deleted successfully.\n");
+                    ReturnToMenu();
+                    return;
                 }
                 else
                 {
@@ -126,14 +113,45 @@
             }
             else
             {
-                Console.WriteLine("No tasks to display.");
-                ReturnToMenu();
+                Console.WriteLine("Invalid task ID entered.");
+                DeleteTask();
             }
+
         }
 
         private static void UpdateTask()
         {
+            DisplayTasks();
 
+            Console.Write($"Please enter the Task ID you wish to update: ");
+            string input = Console.ReadLine()!;
+
+            if (int.TryParse(input, out int taskToUpdate))
+            {
+                if (taskToUpdate > 0 && taskToUpdate <= Task.GetTasks().Count)
+                {
+                    Console.Write("Enter new task name: ");
+                    string taskName = Console.ReadLine()!;
+
+                    Console.Write("Enter new task description: ");
+                    string taskDescription = Console.ReadLine()!;
+
+                    Task.GetTasks()[taskToUpdate - 1].UpdateTask(taskName, taskDescription);
+                    Console.WriteLine("Task updated successfully.\n");
+                    ReturnToMenu();
+                    return;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid task ID entered.");
+                    UpdateTask();
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid task ID entered.");
+                UpdateTask();
+            }
         }
 
         private static void ReturnToMenu()
