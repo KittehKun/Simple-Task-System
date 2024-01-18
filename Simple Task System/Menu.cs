@@ -46,7 +46,20 @@
 
         private static void DisplayTasks()
         {
-            Console.WriteLine("Displaying tasks...");
+            if (Task.GetTasks().Count == 0)
+            {
+                Console.WriteLine("No tasks to display.\n");
+                ReturnToMenu();
+                return;
+            }
+
+            foreach (Task task in Task.GetTasks())
+            {
+                Console.WriteLine($"Task Name: {task.TaskName}");
+                Console.WriteLine($"Description: {task.TaskDescription}\n");
+            }
+
+            ReturnToMenu();
         }
 
         private static void CreateTask()
@@ -69,22 +82,66 @@
 
                 //Create a new task object and add it to the list of tasks
                 Task.GetTasks().Add(new Task(taskName, taskDescription));
-                Console.WriteLine("Task has been added. Press any key to return to the main menu.");
-                Console.ReadKey();
-                Console.Clear();
-                DisplayMenu();
+                Console.WriteLine("Task added successfully.\n");
+                ReturnToMenu();
                 return;
             }
         }
 
         private static void DeleteTask()
         {
-            Console.WriteLine("Deleting task...");
+            if (Task.GetTasks().Count != 0)
+            {
+                int taskId = 1;
+                foreach (Task task in Task.GetTasks())
+                {
+                    Console.WriteLine($"Task ID: {taskId}");
+                    Console.WriteLine($"Task Name: {task.TaskName}");
+                    Console.WriteLine($"Description: {task.TaskDescription}\n");
+                    taskId++;
+                }
+
+                Console.Write("Enter the ID of the task you wish to delete: ");
+                string input = Console.ReadLine()!;
+                if (int.TryParse(input, out int taskToDelete))
+                {
+                    if (taskToDelete > 0 && taskToDelete <= Task.GetTasks().Count)
+                    {
+                        Task.GetTasks().RemoveAt(taskToDelete - 1);
+                        Console.WriteLine("Task deleted successfully.\n");
+                        ReturnToMenu();
+                        return;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid task ID entered.");
+                        DeleteTask();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid task ID entered.");
+                    DeleteTask();
+                }
+            }
+            else
+            {
+                Console.WriteLine("No tasks to display.");
+                ReturnToMenu();
+            }
         }
 
         private static void UpdateTask()
         {
-            Console.WriteLine("Updating task...");
+
+        }
+
+        private static void ReturnToMenu()
+        {
+            Console.WriteLine("Press any key to return to the menu.");
+            Console.ReadKey();
+            Console.Clear();
+            DisplayMenu();
         }
     }
 }
